@@ -4,6 +4,8 @@ import { makeRandomNumber } from "../utils";
 function Ticker() {
   const [price, setPrice] = useState(0);
   const [color, setColor] = useState("black");
+  const prevPriceRef = useRef(price)
+  
 
   useEffect(() => {
     const id = setInterval(() => setPrice(makeRandomNumber), 1000);
@@ -12,21 +14,25 @@ function Ticker() {
     };
   }, []);
 
-   // create the ref and set its initial value
-   const prevPriceRef = useRef(price);
 
-  useEffect(() => {
-   
-    const prevPrice = prevPriceRef.current;
-    if (price > prevPrice) {
+// when the price goes up, display font in green
+// when the price goes down, display font in red
+
+//we use useRef to keep track of the prevPrice
+  
+  useEffect(()=>{
+    const prevPrice = prevPriceRef.current
+
+    console.log(price, prevPrice)
+    if(price>prevPrice){
       setColor("green");
-    } else if (price < prevPrice) {
-      setColor("red");
-    } else {
-      setColor("black");
+    }else if(price< prevPrice){
+      setColor("red")
+    }else{
+      setColor("black")
     }
-    prevPrice.current = price
-  }, [price])
+    prevPriceRef.current = price
+  },[price])
 
   return (
     <div>
